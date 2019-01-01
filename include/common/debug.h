@@ -19,8 +19,7 @@
 #elif defined __APPLE__
 #define debug_break() __builtin_trap();
 #elif defined __GNUC__ || defined __MINGW32 || defined __clang__
-#include <signal.h>
-#define debug_break() raise(SIGSEGV);
+#define debug_break() asm("int $3");
 #else
 #define debug_break() *((int*)0) = 0;
 #endif
