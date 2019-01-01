@@ -20,13 +20,13 @@ class Random {
   explicit Random(int seed) : m_generator(seed) {}
 
   template <typename T>
-  inline int uniform(T begin, T end) {
+  inline T uniform(T begin, T end) {
     std::uniform_int_distribution<T> dist(begin, end);
     return dist(m_generator);
   }
 
   template <typename T>
-  inline int uniform(T end) {
+  inline T uniform(T end) {
     return uniform(T(0), end);
   }
 
