@@ -49,13 +49,13 @@
 #define print_error(filePath, line, functionName, msgtype, errMsg)          \
   do {                                                                      \
     debug_printf("%s(%i): in function \"%s\":\n%s: %s\n\n", filePath, line, \
-                 functionName, msgtype, errMsg);                            \
+        functionName, msgtype, errMsg);                                     \
   } while (0);
 
 template <typename T, typename U, typename Stream>
 inline void debug_assert_print_impl(const T& left, const U& right,
-                                    const char* left_str, const char* right_str,
-                                    const char* op_str, Stream& ss) {
+    const char* left_str, const char* right_str, const char* op_str,
+    Stream& ss) {
   ss << "expected " << left_str << " " << op_str << " " << right_str
      << ", but got:\n"
      << left_str << ":\n"
@@ -66,18 +66,14 @@ inline void debug_assert_print_impl(const T& left, const U& right,
 
 template <typename T, typename U>
 inline std::string debug_assert_print(const T& left, const U& right,
-                                      const char* left_str,
-                                      const char* right_str,
-                                      const char* op_str) {
+    const char* left_str, const char* right_str, const char* op_str) {
   std::stringstream ss;
   debug_assert_print_impl(left, right, left_str, right_str, op_str, ss);
   return ss.str();
 }
 
 inline std::string debug_assert_print(float left, float right,
-                                      const char* left_str,
-                                      const char* right_str,
-                                      const char* op_str) {
+    const char* left_str, const char* right_str, const char* op_str) {
   std::stringstream ss;
   ss << std::fixed << std::setw(10) << std::setprecision(10);
   debug_assert_print_impl(left, right, left_str, right_str, op_str, ss);
@@ -86,9 +82,7 @@ inline std::string debug_assert_print(float left, float right,
 }
 
 inline std::string debug_assert_print(double left, double right,
-                                      const char* left_str,
-                                      const char* right_str,
-                                      const char* op_str) {
+    const char* left_str, const char* right_str, const char* op_str) {
   std::stringstream ss;
   ss << std::fixed << std::setw(20) << std::setprecision(20);
   debug_assert_print_impl(left, right, left_str, right_str, op_str, ss);
@@ -110,13 +104,13 @@ inline std::string debug_assert_print(double left, double right,
 
 #define debug_assert(...) MACRO_OVERLOAD(debug_assert, __VA_ARGS__)
 
-#define expect_with_op(left, right, op)                             \
-  if (!(op(left, right))) {                                         \
-    const auto msg =                                                \
-        debug_assert_print(left, right, #left, #right, op.c_str()); \
-    print_error(__FILE__, __LINE__, __func__, "assertion failed",   \
-                (msg.c_str()));                                     \
-    debug_break();                                                  \
+#define expect_with_op(left, right, op)                                   \
+  if (!(op(left, right))) {                                               \
+    const auto msg =                                                      \
+        debug_assert_print(left, right, #left, #right, op.c_str());       \
+    print_error(                                                          \
+        __FILE__, __LINE__, __func__, "assertion failed", (msg.c_str())); \
+    debug_break();                                                        \
   }
 
 struct op_equal {
@@ -278,13 +272,13 @@ struct op_greater_equal {
 #define expect_greater_equal(left, right) \
   expect_with_op(left, right, op_greater_equal())
 
-#define expect_non_null(ptr)                                       \
-  if ((ptr == nullptr) || (!ptr) || (ptr == NULL) || (ptr == 0)) { \
-    std::stringstream ss;                                          \
-    ss << "expected " << #ptr " to be non-null";                   \
-    print_error(__FILE__, __LINE__, __func__, "assertion failed",  \
-                (ss.str().c_str()));                               \
-    debug_break();                                                 \
+#define expect_non_null(ptr)                                                   \
+  if ((ptr == nullptr) || (!ptr) || (ptr == NULL) || (ptr == 0)) {             \
+    std::stringstream ss;                                                      \
+    ss << "expected " << #ptr " to be non-null";                               \
+    print_error(                                                               \
+        __FILE__, __LINE__, __func__, "assertion failed", (ss.str().c_str())); \
+    debug_break();                                                             \
   }
 
 #else
